@@ -28,7 +28,7 @@ export function useConfirmModal() {
       await options.onConfirm();
       setOptions(null);
     } catch {
-      // Keep the modal open so the user can retry or cancel.
+      setOptions(null);
     } finally {
       setLoading(false);
     }

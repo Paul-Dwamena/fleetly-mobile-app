@@ -15,7 +15,7 @@ function getFullName(profile) {
     return name;
   }
 
-  return profile.name ?? profile.email?.split('@')[0] ?? 'Driver';
+  return profile.email?.split('@')[0] ?? 'Driver';
 }
 
 export function getStatusBadge(status) {
@@ -36,11 +36,12 @@ export function getStatusBadge(status) {
   return { label: status || 'Unknown', status: 'inactive' };
 }
 
-export default function ProfileSummaryCard({ profile }) {
-  const statusBadge = profile?.status ? getStatusBadge(profile.status) : null;
-  const licenseExpiryLabel = profile?.licenseExpiry
-    ? formatDate(profile.licenseExpiry)
+export default function ProfileSummaryCard({ profile, authUser }) {
+  const statusBadge = authUser?.status ? getStatusBadge(authUser.status) : null;
+  const licenseExpiryLabel = profile?.licenseExpiryDate
+    ? formatDate(profile.licenseExpiryDate)
     : null;
+  const driverName = getFullName(profile);
 
   return (
     <Card comfortable style={styles.card}>
@@ -54,24 +55,20 @@ export default function ProfileSummaryCard({ profile }) {
       </View>
 
       <View style={styles.profileRow}>
-        <CompanyLogo
-          companyName={profile?.company?.name}
-          logoUrl={profile?.company?.logoUrl}
-          size={64}
-        />
+        <CompanyLogo companyName={driverName} size={64} />
         <View style={styles.textBlock}>
-          <Text style={styles.name}>{getFullName(profile)}</Text>
+          <Text style={styles.name}>{driverName}</Text>
           <Text style={styles.email} numberOfLines={2}>
             {profile?.email ?? '—'}
           </Text>
         </View>
       </View>
 
-      {profile?.company?.name ? (
-        <View style={styles.companyPanel}>
-          <Text style={styles.panelLabel}>Company</Text>
-          <Text style={styles.panelValue} numberOfLines={2}>
-            {profile.company.name}
+      {profile?.employeeNumber ? (
+        <View style={styles.infoPanel}>
+          <Text style={styles.panelLabel}>Employee number</Text>
+          <Text style={styles.panelValue} numberOfLines={1}>
+            {profile.employeeNumber}
           </Text>
         </View>
       ) : null}
@@ -130,7 +127,7 @@ const styles = StyleSheet.create({
     color: colors.slate[600],
     fontWeight: '500',
   },
-  companyPanel: {
+  infoPanel: {
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.lg,
     marginBottom: spacing.sm,

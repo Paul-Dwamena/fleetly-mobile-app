@@ -59,11 +59,8 @@ function getStatusBannerStyle(status) {
 
 export default function VehicleRequestSummaryCard({ request }) {
   const statusBadge = request?.status ? getStatusBadge(request.status) : null;
-  const vehicleDetails = [request?.vehicleMake, request?.vehicleModel]
-    .filter(Boolean)
-    .join(' ');
-  const requestedLabel = request?.requestedAt
-    ? formatDateTime(request.requestedAt)
+  const submittedLabel = request?.createdAt
+    ? formatDateTime(request.createdAt)
     : null;
   const statusMessage = getStatusMessage(request?.status);
   const bannerStyle = getStatusBannerStyle(request?.status);
@@ -80,18 +77,15 @@ export default function VehicleRequestSummaryCard({ request }) {
         <Text style={styles.title}>{request.reason}</Text>
       </View>
 
-      <View style={styles.platePanel}>
-        <Text style={styles.panelLabel}>Vehicle plate</Text>
-        <Text style={styles.plateNumber}>{request.vehiclePlate}</Text>
-        {vehicleDetails ? (
-          <Text style={styles.vehicleDetails}>{vehicleDetails}</Text>
-        ) : null}
+      <View style={styles.vehiclePanel}>
+        <Text style={styles.panelLabel}>Requested vehicle</Text>
+        <Text style={styles.vehicleName}>{request.vehicleName}</Text>
       </View>
 
-      {requestedLabel ? (
-        <View style={styles.requestedRow}>
-          <Text style={styles.requestedLabel}>Requested</Text>
-          <Text style={styles.requestedValue}>{requestedLabel}</Text>
+      {submittedLabel ? (
+        <View style={styles.submittedRow}>
+          <Text style={styles.submittedLabel}>Submitted</Text>
+          <Text style={styles.submittedValue}>{submittedLabel}</Text>
         </View>
       ) : null}
 
@@ -142,7 +136,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: colors.slate[900],
   },
-  platePanel: {
+  vehiclePanel: {
     backgroundColor: colors.primary[50],
     borderRadius: 14,
     borderWidth: 1,
@@ -160,21 +154,13 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
     marginBottom: spacing.xs,
   },
-  plateNumber: {
-    fontSize: 24,
-    lineHeight: 30,
+  vehicleName: {
+    fontSize: 20,
+    lineHeight: 26,
     fontWeight: '800',
     color: colors.slate[900],
-    letterSpacing: 1,
   },
-  vehicleDetails: {
-    fontSize: 15,
-    lineHeight: 22,
-    color: colors.slate[600],
-    fontWeight: '500',
-    marginTop: spacing.xs,
-  },
-  requestedRow: {
+  submittedRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -187,14 +173,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.slate[200],
   },
-  requestedLabel: {
+  submittedLabel: {
     fontSize: 14,
     lineHeight: 20,
     fontWeight: '600',
     color: colors.slate[600],
     flexShrink: 0,
   },
-  requestedValue: {
+  submittedValue: {
     flex: 1,
     fontSize: 15,
     lineHeight: 20,

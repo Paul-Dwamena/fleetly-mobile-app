@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, StyleSheet } from 'react-native';import {
+import { Alert, StyleSheet } from 'react-native';
+import { useSelector } from 'react-redux';
+import {
   AlertBanner,
   ConfirmModal,
   LoadingSpinner,
@@ -14,14 +16,16 @@ import {
   createInspection,
   getInspectionTemplate,
 } from '../../services/inspectionService';
-import { MOCK_INSPECTION_DEFAULTS } from '../../mocks/inspectionMock';
+import { getDriverOverview } from '../../services/driverService';
 import { getApiError } from '../../utils/api/error';
-import { spacing } from '../../theme';
+import { colors, spacing } from '../../theme';
 
 export default function InspectionFormScreen({ route, navigation }) {
   const { templateId } = route.params;
+  const authUser = useSelector((state) => state.auth.user);
   const { confirm, confirmModalProps } = useConfirmModal();
   const [template, setTemplate] = useState(null);
+  const [vehicleId, setVehicleId] = useState(null);
   const [answers, setAnswers] = useState({});
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -36,15 +40,21 @@ export default function InspectionFormScreen({ route, navigation }) {
   };
 
   useEffect(() => {
-    const loadTemplate = async () => {
+    const loadFormData = async () => {
       try {
         setError('');
         setLoading(true);
-        const data = await getInspectionTemplate(templateId);
-        setTemplate(data);
+
+        const [templateData, overview] = await Promise.all([
+          getInspectionTemplate(templateId),
+          getDriverOverview(),
+        ]);
+
+        setTemplate(templateData);
+        setVehicleId(overview?.currentAsset?.vehicleId ?? null);
 
         const initialAnswers = {};
-        (data.items ?? []).forEach((item) => {
+        (templateData.items ?? []).forEach((item) => {
           initialAnswers[item.id] = { passed: null, remarks: '' };
         });
         setAnswers(initialAnswers);
@@ -55,7 +65,7 @@ export default function InspectionFormScreen({ route, navigation }) {
       }
     };
 
-    loadTemplate();
+    loadFormData();
   }, [templateId]);
 
   useEffect(() => {
@@ -86,14 +96,19 @@ export default function InspectionFormScreen({ route, navigation }) {
 
     try {
       const payload = {
-        vehicleId: MOCK_INSPECTION_DEFAULTS.vehicleId,
+        vehicleId,
         templateId,
-        operatorId: MOCK_INSPECTION_DEFAULTS.operatorId,
-        items: items.map((item) => ({
-          templateItemId: item.id,
-          passed: answers[item.id].passed,
-          remarks: answers[item.id].remarks.trim() || 'All good',
-        })),
+        operatorId: authUser?.id,
+        items: items.map((item) => {
+          const answer = answers[item.id];
+          const remarks = answer.remarks.trim();
+
+          return {
+            templateItemId: item.id,
+            passed: answer.passed,
+            remarks: remarks || (answer.passed ? 'All good' : ''),
+          };
+        }),
       };
 
       const result = await createInspection(payload);
@@ -120,22 +135,21 @@ export default function InspectionFormScreen({ route, navigation }) {
   };
 
   const handleSubmitPress = () => {
+    if (!vehicleId) {
+      showError('No vehicle is assigned to you. Contact your fleet manager.');
+      return;
+    }
+
+    if (!authUser?.id) {
+      showError('Unable to identify your driver account. Please sign in again.');
+      return;
+    }
+
     const items = template?.items ?? [];
     const incomplete = items.find((item) => answers[item.id]?.passed === null);
 
     if (incomplete) {
       showError('Please mark every item as pass or fail.');
-      return;
-    }
-
-    const missingRemarks = items.find(
-      (item) =>
-        answers[item.id]?.passed === false &&
-        !answers[item.id]?.remarks?.trim(),
-    );
-
-    if (missingRemarks) {
-      showError('Please add remarks for every failed item.');
       return;
     }
 
@@ -166,6 +180,7 @@ export default function InspectionFormScreen({ route, navigation }) {
         title="Checklist"
         subtitle="Mark each item as pass or fail"
         style={styles.section}
+        contentStyle={{paddingVertical: 10, backgroundColor: colors.primary[50]}}
         contentFlush
       >
         {items.map((item, index) => (

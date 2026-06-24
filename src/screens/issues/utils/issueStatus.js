@@ -4,7 +4,7 @@ export function getStatusBadge(status) {
   const normalized = status?.toUpperCase();
 
   if (normalized === 'OPEN') {
-    return { label: 'Open', status: 'pending' };
+    return { label: 'Open', status: 'review' };
   }
 
   if (normalized === 'IN_PROGRESS') {

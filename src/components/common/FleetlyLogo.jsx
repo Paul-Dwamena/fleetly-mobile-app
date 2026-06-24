@@ -1,14 +1,13 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import { colors, spacing, shadows } from '../../theme';
+
+const fleetlyLogo = require('../../../android/app/src/main/res/playstore-icon.png');
 
 export default function FleetlyLogo({ showTagline = false }) {
   return (
     <View style={styles.container}>
-      <View style={styles.iconBox}>
-        <Icon name="car-sport" size={36} color={colors.white} />
-      </View>
+      <Image source={fleetlyLogo} style={styles.logo} resizeMode="cover" />
       <Text style={styles.title}>Fleetly</Text>
       {showTagline ? (
         <Text style={styles.tagline}>Moving Efficiency Forward</Text>
@@ -22,16 +21,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: spacing.xxxl,
   },
-  iconBox: {
+  logo: {
     width: 72,
     height: 72,
     borderRadius: 16,
-    backgroundColor: colors.primary[500],
-    alignItems: 'center',
-    justifyContent: 'center',
     marginBottom: spacing.lg,
-    borderWidth: 3,
-    borderColor: 'rgba(255,255,255,0.3)',
     ...shadows.sm,
   },
   title: {

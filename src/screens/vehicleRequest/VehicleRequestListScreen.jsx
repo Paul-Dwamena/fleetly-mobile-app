@@ -38,7 +38,11 @@ export default function VehicleRequestListScreen({ navigation }) {
 
       setError('');
       const data = await getMyVehicleRequests();
-      setRequests(Array.isArray(data) ? data : data?.content ?? []);
+      const list = Array.isArray(data) ? data : data?.content ?? [];
+      list.sort(
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      );
+      setRequests(list);
     } catch (err) {
       setError(getApiError(err));
     } finally {
@@ -115,7 +119,7 @@ export default function VehicleRequestListScreen({ navigation }) {
                   isLast={index === requests.length - 1}
                   onPress={() =>
                     navigation.navigate('VehicleRequestDetail', {
-                      requestId: item.id,
+                      request: item,
                     })
                   }
                 />

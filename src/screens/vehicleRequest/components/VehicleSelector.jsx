@@ -3,11 +3,6 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { colors, spacing } from '../../../theme';
 
-function formatVehicleOption(vehicle) {
-  const details = [vehicle.make, vehicle.model].filter(Boolean).join(' ');
-  return details || 'Vehicle';
-}
-
 export default function VehicleSelector({ vehicles, value, onChange }) {
   if (vehicles.length === 0) {
     return (
@@ -28,6 +23,10 @@ export default function VehicleSelector({ vehicles, value, onChange }) {
         {vehicles.map((vehicle, index) => {
           const isActive = value === vehicle.id;
           const isLast = index === vehicles.length - 1;
+          const plate = vehicle.registrationNumber ?? vehicle.plateNumber;
+          const details = [vehicle.make, vehicle.model, vehicle.year]
+            .filter(Boolean)
+            .join(' · ');
 
           return (
             <TouchableOpacity
@@ -42,11 +41,13 @@ export default function VehicleSelector({ vehicles, value, onChange }) {
             >
               <View style={styles.optionContent}>
                 <Text style={[styles.plate, isActive && styles.plateActive]}>
-                  {vehicle.plateNumber}
+                  {plate ?? vehicle.name}
                 </Text>
-                <Text style={[styles.details, isActive && styles.detailsActive]}>
-                  {formatVehicleOption(vehicle)}
-                </Text>
+                {details ? (
+                  <Text style={[styles.details, isActive && styles.detailsActive]}>
+                    {details}
+                  </Text>
+                ) : null}
               </View>
               <Icon
                 name={isActive ? 'checkmark-circle' : 'car-outline'}

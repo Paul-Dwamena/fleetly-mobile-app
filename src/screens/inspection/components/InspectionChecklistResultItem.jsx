@@ -9,7 +9,7 @@ export default function InspectionChecklistResultItem({ item, isLast = false }) 
       <View style={styles.content}>
         <View style={styles.headerRow}>
           <Text style={[styles.title, styles.labelFlex]} numberOfLines={2}>
-            {item.label}
+            {item.question ?? item.label}
           </Text>
           <StatusBadge
             size="compact"

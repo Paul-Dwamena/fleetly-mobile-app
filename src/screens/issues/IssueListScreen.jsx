@@ -39,7 +39,11 @@ export default function IssueListScreen() {
 
       setError('');
       const data = await getMyIssues();
-      setIssues(Array.isArray(data) ? data : data?.content ?? []);
+      const list = Array.isArray(data) ? data : data?.content ?? [];
+      list.sort(
+        (a, b) => new Date(b.reportedAt).getTime() - new Date(a.reportedAt).getTime(),
+      );
+      setIssues(list);
     } catch (err) {
       setError(getApiError(err));
     } finally {

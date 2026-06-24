@@ -6,6 +6,7 @@ import {
   View,
 } from 'react-native';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 import {
   AlertBanner,
   Button,
@@ -24,6 +25,7 @@ import { colors, spacing, typography, shadows } from '../../theme';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
+  const authUser = useSelector((state) => state.auth.user);
   const [overview, setOverview] = useState(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -63,8 +65,10 @@ export default function HomeScreen() {
     );
   }
 
-  const vehicle = overview?.assignedVehicle;
-  const summary = overview?.summary ?? {};
+  const vehicle = overview?.currentAsset ?? null;
+  const driverName = [authUser?.firstName, authUser?.lastName].filter(Boolean).join(' ')
+    || overview?.email?.split('@')[0]
+    || 'Driver';
 
   return (
     <Screen
@@ -86,18 +90,17 @@ export default function HomeScreen() {
           <CompanyLogo
             variant="hero"
             size={68}
-            companyName={overview?.company?.name}
-            logoUrl={overview?.company?.logoUrl}
+            companyName={driverName}
           />
           <View style={styles.headerText}>
-            {overview?.company?.name ? (
+            {overview?.location ? (
               <Text style={styles.companyLabel} numberOfLines={1}>
-                {overview.company.name}
+                {overview.location}
               </Text>
             ) : null}
             <Text style={styles.greeting}>{getGreeting()},</Text>
             <Text style={styles.driverName} numberOfLines={2}>
-              {overview?.driverName ?? 'Driver'}
+              {driverName}
             </Text>
           </View>
         </View>
@@ -118,22 +121,22 @@ export default function HomeScreen() {
 
       <Section
         title="Your summary"
-        subtitle="What needs your attention today"
+        subtitle="Your driving performance"
         contentFlush
       >
         <View style={styles.statsGrid}>
           <StatCard
             variant="cell"
             index={0}
-            title="Inspections due"
-            value={String(summary.inspectionsDue ?? 0)}
-            icon="clipboard-outline"
+            title="Safety score"
+            value={String(overview?.safetyScore ?? 0)}
+            icon="shield-checkmark-outline"
           />
           <StatCard
             variant="cell"
             index={1}
-            title="Open issues"
-            value={String(summary.openIssues ?? 0)}
+            title="Incidents"
+            value={String(overview?.incidents ?? 0)}
             icon="warning-outline"
             iconColor={colors.warning[700]}
             iconBackground={colors.warning[100]}
@@ -141,16 +144,16 @@ export default function HomeScreen() {
           <StatCard
             variant="cell"
             index={2}
-            title="Trainings"
-            value={String(summary.pendingTrainings ?? 0)}
-            icon="school-outline"
+            title="Safety rating"
+            value={overview?.safetyRating ?? '—'}
+            icon="ribbon-outline"
           />
           <StatCard
             variant="cell"
             index={3}
-            title="Requests"
-            value={String(summary.vehicleRequests ?? 0)}
-            icon="car-outline"
+            title="Percentile"
+            value={overview?.percentile ?? '—'}
+            icon="trending-up-outline"
           />
         </View>
       </Section>

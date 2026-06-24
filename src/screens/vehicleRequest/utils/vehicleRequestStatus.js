@@ -21,8 +21,17 @@ export function formatVehicleLabel(vehicle) {
     return '—';
   }
 
+  const name = vehicle.name;
+  const plate = vehicle.registrationNumber ?? vehicle.plateNumber ?? vehicle.plate;
   const details = [vehicle.make, vehicle.model].filter(Boolean).join(' ');
-  return details
-    ? `${vehicle.plateNumber ?? vehicle.plate} · ${details}`
-    : vehicle.plateNumber ?? vehicle.plate ?? '—';
+
+  if (name && plate) {
+    return `${name} · ${plate}`;
+  }
+
+  if (plate && details) {
+    return `${plate} · ${details}`;
+  }
+
+  return name ?? plate ?? details ?? '—';
 }

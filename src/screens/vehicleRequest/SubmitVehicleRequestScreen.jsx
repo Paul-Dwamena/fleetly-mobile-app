@@ -69,7 +69,7 @@ export default function SubmitVehicleRequestScreen({ navigation }) {
     setSubmitting(true);
 
     try {
-      const result = await submitVehicleRequest({
+      await submitVehicleRequest({
         vehicleId,
         reason: reason.trim(),
       });
@@ -77,15 +77,7 @@ export default function SubmitVehicleRequestScreen({ navigation }) {
       Alert.alert(
         'Request submitted',
         'Your fleet manager will review your vehicle request.',
-        [
-          {
-            text: 'View details',
-            onPress: () =>
-              navigation.replace('VehicleRequestDetail', {
-                requestId: result.id,
-              }),
-          },
-        ],
+        [{ text: 'OK', onPress: () => navigation.navigate('VehicleRequestList') }],
       );
     } catch (err) {
       showError(getApiError(err));

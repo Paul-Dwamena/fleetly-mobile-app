@@ -7,8 +7,15 @@ import { getStatusBadge } from '../utils/trainingStatus';
 
 export default function TrainingSummaryCard({ training }) {
   const statusBadge = training?.status ? getStatusBadge(training.status) : null;
-  const isInReview = training?.status?.toUpperCase() === 'IN_REVIEW';
-  const expiryLabel = training?.expiryDate ? formatDate(training.expiryDate) : null;
+  const scheduledLabel = training?.scheduledDate
+    ? formatDate(training.scheduledDate)
+    : null;
+  const completionLabel = training?.completionDate
+    ? formatDate(training.completionDate)
+    : null;
+  const isCompleted = ['COMPLETED', 'APPROVED'].includes(
+    training?.status?.toUpperCase(),
+  );
 
   return (
     <Card comfortable style={styles.card}>
@@ -19,24 +26,38 @@ export default function TrainingSummaryCard({ training }) {
             <StatusBadge label={statusBadge.label} status={statusBadge.status} />
           ) : null}
         </View>
-        <Text style={styles.title}>{training.type}</Text>
+        <Text style={styles.title}>{training.trainingName}</Text>
       </View>
 
-      {training.description ? (
-        <Text style={styles.description}>{training.description}</Text>
+      {training.instructor ? (
+        <Text style={styles.description}>Instructor: {training.instructor}</Text>
       ) : null}
 
-      {expiryLabel ? (
-        <View style={styles.expiryRow}>
-          <Text style={styles.expiryLabel}>Expires</Text>
-          <Text style={styles.expiryValue}>{expiryLabel}</Text>
+      {training.location ? (
+        <View style={styles.infoPanel}>
+          <Text style={styles.panelLabel}>Location</Text>
+          <Text style={styles.panelValue}>{training.location}</Text>
         </View>
       ) : null}
 
-      {isInReview ? (
-        <View style={styles.reviewBanner}>
-          <Text style={styles.reviewText}>
-            Your certificate is being reviewed by your fleet manager.
+      {scheduledLabel ? (
+        <View style={styles.dateRow}>
+          <Text style={styles.dateLabel}>Scheduled</Text>
+          <Text style={styles.dateValue}>{scheduledLabel}</Text>
+        </View>
+      ) : null}
+
+      {completionLabel ? (
+        <View style={styles.dateRow}>
+          <Text style={styles.dateLabel}>Completed</Text>
+          <Text style={styles.dateValue}>{completionLabel}</Text>
+        </View>
+      ) : null}
+
+      {isCompleted ? (
+        <View style={styles.completeBanner}>
+          <Text style={styles.completeText}>
+            You have completed this training course.
           </Text>
         </View>
       ) : null}
@@ -78,7 +99,31 @@ const styles = StyleSheet.create({
     color: colors.slate[600],
     marginBottom: spacing.md,
   },
-  expiryRow: {
+  infoPanel: {
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
+    marginBottom: spacing.sm,
+    backgroundColor: colors.primary[50],
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.primary[200],
+  },
+  panelLabel: {
+    fontSize: 12,
+    lineHeight: 16,
+    fontWeight: '700',
+    color: colors.primary[800],
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    marginBottom: spacing.xs,
+  },
+  panelValue: {
+    fontSize: 16,
+    lineHeight: 22,
+    fontWeight: '600',
+    color: colors.slate[900],
+  },
+  dateRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -91,13 +136,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.slate[200],
   },
-  expiryLabel: {
+  dateLabel: {
     fontSize: 14,
     lineHeight: 20,
     fontWeight: '600',
     color: colors.slate[600],
+    flexShrink: 0,
   },
-  expiryValue: {
+  dateValue: {
     flex: 1,
     fontSize: 15,
     lineHeight: 20,
@@ -105,19 +151,19 @@ const styles = StyleSheet.create({
     color: colors.slate[900],
     textAlign: 'right',
   },
-  reviewBanner: {
+  completeBanner: {
     marginTop: spacing.sm,
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.lg,
-    backgroundColor: colors.info[100],
+    backgroundColor: colors.success[100],
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: colors.info[200],
+    borderColor: colors.primary[200],
   },
-  reviewText: {
+  completeText: {
     fontSize: 15,
     lineHeight: 22,
-    color: colors.info[700],
+    color: colors.success[700],
     fontWeight: '500',
   },
 });

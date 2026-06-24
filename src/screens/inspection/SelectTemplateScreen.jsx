@@ -37,7 +37,8 @@ export default function SelectTemplateScreen() {
 
       setError('');
       const data = await getInspectionTemplates();
-      setTemplates(Array.isArray(data) ? data : data?.content ?? []);
+      const list = Array.isArray(data) ? data : data?.content ?? [];
+      setTemplates(list.filter((template) => template.active === true));
     } catch (err) {
       setError(getApiError(err));
     } finally {

@@ -13,7 +13,6 @@ import { login, persistAuth } from '../../services/authService';
 import { setAuth } from '../../store/slices/authSlice';
 import { getApiError } from '../../utils/api/error';
 import { isValidEmail } from '../../utils/validation';
-import { CONFIG } from '../../app/config';
 import { colors, spacing, typography } from '../../theme';
 
 export default function LoginScreen() {
@@ -114,12 +113,6 @@ export default function LoginScreen() {
       <Text style={styles.footer}>
         Driver accounts are created by your fleet manager.
       </Text>
-
-      {CONFIG.USE_MOCK_API ? (
-        <Text style={styles.devHint}>
-          Dev mode: any valid email + password &quot;123456&quot;
-        </Text>
-      ) : null}
     </Screen>
   );
 }
@@ -160,13 +153,6 @@ const styles = StyleSheet.create({
     ...typography.caption,
     color: colors.slate[400],
     textAlign: 'center',
-    paddingHorizontal: spacing.lg,
-  },
-  devHint: {
-    ...typography.caption,
-    color: colors.primary[600],
-    textAlign: 'center',
-    marginTop: spacing.lg,
     paddingHorizontal: spacing.lg,
   },
 });

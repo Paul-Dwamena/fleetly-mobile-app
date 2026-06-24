@@ -32,8 +32,8 @@ export default function IssueSummaryCard({ issue }) {
       </View>
 
       <View style={styles.platePanel}>
-        <Text style={styles.panelLabel}>Vehicle plate</Text>
-        <Text style={styles.plateNumber}>{issue.vehiclePlate}</Text>
+        <Text style={styles.panelLabel}>Vehicle</Text>
+        <Text style={styles.plateNumber}>{issue.vehicleName}</Text>
       </View>
 
       {reportedLabel ? (

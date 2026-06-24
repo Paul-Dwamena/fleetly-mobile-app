@@ -4,7 +4,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   AlertBanner,
   Button,
@@ -28,6 +28,7 @@ import { colors, spacing } from '../../theme';
 
 export default function ProfileScreen({ navigation }) {
   const dispatch = useDispatch();
+  const authUser = useSelector((state) => state.auth.user);
   const { confirm, confirmModalProps } = useConfirmModal();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -115,7 +116,7 @@ export default function ProfileScreen({ navigation }) {
         />
       ) : null}
 
-      <ProfileSummaryCard profile={profile} />
+      <ProfileSummaryCard profile={profile} authUser={authUser} />
 
       <Section
         title="Personal details"
@@ -125,7 +126,7 @@ export default function ProfileScreen({ navigation }) {
         <ProfileDetailRow
           icon="call-outline"
           label="Phone"
-          value={profile?.contactNumber}
+          value={profile?.phoneNumber}
         />
         <ProfileDetailRow
           icon="calendar-outline"
@@ -140,25 +141,48 @@ export default function ProfileScreen({ navigation }) {
         <ProfileDetailRow
           icon="time-outline"
           label="License expiry"
-          value={formatDate(profile?.licenseExpiry)}
+          value={formatDate(profile?.licenseExpiryDate)}
           isLast
         />
       </Section>
 
       <Section
         title="Work details"
-        subtitle="Your fleet assignment"
+        subtitle="Your employment information"
         style={styles.section}
       >
         <ProfileDetailRow
-          icon="business-outline"
-          label="Company"
-          value={profile?.company?.name}
+          icon="id-card-outline"
+          label="Employee number"
+          value={profile?.employeeNumber}
+        />
+        <ProfileDetailRow
+          icon="calendar-outline"
+          label="Hire date"
+          value={formatDate(profile?.hireDate)}
         />
         <ProfileDetailRow
           icon="location-outline"
-          label="Branch"
-          value={profile?.branch}
+          label="Address"
+          value={profile?.address}
+          isLast
+        />
+      </Section>
+
+      <Section
+        title="Emergency contact"
+        subtitle="Who to reach in an emergency"
+        style={styles.section}
+      >
+        <ProfileDetailRow
+          icon="person-outline"
+          label="Contact name"
+          value={profile?.emergencyContactName}
+        />
+        <ProfileDetailRow
+          icon="call-outline"
+          label="Contact phone"
+          value={profile?.emergencyContactPhone}
           isLast
         />
       </Section>

@@ -3,7 +3,7 @@ import { Text, StyleSheet, View } from 'react-native';
 import { Card } from '../../../components/common';
 import { colors, spacing } from '../../../theme';
 
-export default function ReportIssueIntroCard({ vehiclePlate }) {
+export default function ReportIssueIntroCard({ vehicleName }) {
   return (
     <Card comfortable style={styles.card}>
       <Text style={styles.eyebrow}>Report issue</Text>
@@ -11,10 +11,12 @@ export default function ReportIssueIntroCard({ vehiclePlate }) {
         Describe the problem clearly so your fleet manager can help quickly.
       </Text>
 
-      <View style={styles.platePanel}>
-        <Text style={styles.panelLabel}>Vehicle plate</Text>
-        <Text style={styles.plateNumber}>{vehiclePlate}</Text>
-      </View>
+      {vehicleName ? (
+        <View style={styles.platePanel}>
+          <Text style={styles.panelLabel}>Vehicle</Text>
+          <Text style={styles.plateNumber}>{vehicleName}</Text>
+        </View>
+      ) : null}
     </Card>
   );
 }
@@ -60,6 +62,5 @@ const styles = StyleSheet.create({
     lineHeight: 30,
     fontWeight: '800',
     color: colors.slate[900],
-    letterSpacing: 1,
   },
 });

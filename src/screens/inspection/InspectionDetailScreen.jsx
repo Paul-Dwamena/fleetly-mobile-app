@@ -72,7 +72,7 @@ export default function InspectionDetailScreen({ route, navigation }) {
           <Section title="Checklist results" style={styles.section} contentFlush>
             {items.map((item, index) => (
               <InspectionChecklistResultItem
-                key={item.templateItemId}
+                key={`${item.question}-${index}`}
                 item={item}
                 isLast={index === items.length - 1}
               />

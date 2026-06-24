@@ -3,22 +3,17 @@ import { Text, StyleSheet, View } from 'react-native';
 import { Card, StatusBadge } from '../../../components/common';
 import { colors, spacing } from '../../../theme';
 import { formatDateTime } from '../../../utils/format/date';
-
-function getOutcomeBadge(hasFailures) {
-  if (hasFailures) {
-    return { label: 'Issues found', status: 'pending' };
-  }
-
-  return { label: 'All passed', status: 'active' };
-}
+import {
+  formatInspectionScore,
+  getInspectionCounts,
+  getInspectionOutcomeBadge,
+} from '../utils/inspectionStatus';
 
 export default function InspectionSummaryCard({ inspection }) {
-  const items = inspection?.items ?? [];
-  const passedCount = items.filter((item) => item.passed).length;
-  const failedCount = items.filter((item) => !item.passed).length;
-  const totalCount = items.length;
+  const { passedCount, failedCount, totalCount } = getInspectionCounts(inspection);
   const hasFailures = failedCount > 0;
-  const outcome = getOutcomeBadge(hasFailures);
+  const outcome = getInspectionOutcomeBadge(inspection);
+  const scoreLabel = formatInspectionScore(inspection.score);
 
   return (
     <Card comfortable style={styles.card}>
@@ -31,26 +26,37 @@ export default function InspectionSummaryCard({ inspection }) {
       </View>
 
       <View style={styles.platePanel}>
-        <Text style={styles.panelLabel}>Vehicle plate</Text>
-        <Text style={styles.plateNumber}>{inspection.vehiclePlate}</Text>
+        <Text style={styles.panelLabel}>Vehicle</Text>
+        <Text style={styles.plateNumber}>{inspection.vehicleName}</Text>
       </View>
 
       <View style={styles.completedRow}>
-        <Text style={styles.completedLabel}>Completed</Text>
+        <Text style={styles.completedLabel}>Inspected</Text>
         <Text style={styles.completedValue}>
-          {formatDateTime(inspection.completedAt)}
+          {formatDateTime(inspection.inspectionDate)}
         </Text>
       </View>
+
+      {scoreLabel ? (
+        <View style={styles.scoreRow}>
+          <Text style={styles.scoreLabel}>Score</Text>
+          <Text style={styles.scoreValue}>{scoreLabel}</Text>
+        </View>
+      ) : null}
 
       <View style={styles.statsBlock}>
         <Text style={styles.statsLabel}>Results</Text>
         <View style={styles.badgeRow}>
-          <StatusBadge label={`${passedCount} passed`} status="active" />
+          {passedCount > 0 ? (
+            <StatusBadge label={`${passedCount} passed`} status="active" />
+          ) : null}
           <StatusBadge
             label={`${failedCount} failed`}
             status={hasFailures ? 'pending' : 'inactive'}
           />
-          <StatusBadge label={`${totalCount} total`} status="inactive" />
+          {totalCount > 0 ? (
+            <StatusBadge label={`${totalCount} total`} status="inactive" />
+          ) : null}
         </View>
       </View>
     </Card>
@@ -108,7 +114,6 @@ const styles = StyleSheet.create({
     lineHeight: 30,
     fontWeight: '800',
     color: colors.slate[900],
-    letterSpacing: 1,
   },
   completedRow: {
     flexDirection: 'row',
@@ -117,7 +122,7 @@ const styles = StyleSheet.create({
     gap: spacing.md,
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.lg,
-    marginBottom: spacing.lg,
+    marginBottom: spacing.sm,
     backgroundColor: colors.slate[100],
     borderRadius: 12,
     borderWidth: 1,
@@ -137,6 +142,31 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: colors.slate[900],
     textAlign: 'right',
+  },
+  scoreRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: spacing.md,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
+    marginBottom: spacing.lg,
+    backgroundColor: colors.primary[50],
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.primary[100],
+  },
+  scoreLabel: {
+    fontSize: 14,
+    lineHeight: 20,
+    fontWeight: '600',
+    color: colors.primary[800],
+  },
+  scoreValue: {
+    fontSize: 18,
+    lineHeight: 24,
+    fontWeight: '800',
+    color: colors.slate[900],
   },
   statsBlock: {
     paddingTop: spacing.md,

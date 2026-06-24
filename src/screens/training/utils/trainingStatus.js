@@ -9,6 +9,10 @@ export function getStatusBadge(status) {
     return { label: 'In review', status: 'review' };
   }
 
+  if (normalized === 'SCHEDULED') {
+    return { label: 'Scheduled', status: 'review' };
+  }
+
   if (normalized === 'OVERDUE') {
     return { label: 'Overdue', status: 'danger' };
   }
@@ -25,7 +29,7 @@ export function getStatusBadge(status) {
     return { label: 'Assigned', status: 'pending' };
   }
 
-  return { label: 'Pending', status: 'pending' };
+  return { label: status || 'Pending', status: 'pending' };
 }
 
 export function canSubmitCompletion(status) {
@@ -34,12 +38,7 @@ export function canSubmitCompletion(status) {
 }
 
 export function hasSubmittedDetails(training) {
-  return Boolean(
-    training?.issueDate ||
-      training?.expiryDate ||
-      training?.completionDate ||
-      training?.certificateUrl,
-  );
+  return Boolean(training?.completionDate);
 }
 
 export function getTodayIsoDate() {

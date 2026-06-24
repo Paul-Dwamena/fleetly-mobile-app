@@ -56,10 +56,7 @@ export default function TrainingDetailScreen({ route, navigation }) {
         setLoading(true);
         const data = await getTraining(trainingId);
         setTraining(data);
-        setIssueDate(data.issueDate ?? '');
-        setExpiryDate(data.expiryDate ?? '');
         setCompletionDate(data.completionDate ?? getTodayIsoDate());
-        setCertificateUrl(data.certificateUrl ?? '');
       } catch (err) {
         showError(getApiError(err));
       } finally {
@@ -71,10 +68,10 @@ export default function TrainingDetailScreen({ route, navigation }) {
   }, [trainingId]);
 
   useEffect(() => {
-    if (training?.type) {
-      navigation.setOptions({ title: training.type });
+    if (training?.trainingName) {
+      navigation.setOptions({ title: training.trainingName });
     }
-  }, [training?.type, navigation]);
+  }, [training?.trainingName, navigation]);
 
   const submitTraining = async () => {
     setError('');
@@ -91,8 +88,8 @@ export default function TrainingDetailScreen({ route, navigation }) {
       await completeTraining(trainingId, payload);
 
       Alert.alert(
-        'Submitted for review',
-        'Your certificate details have been sent to your fleet manager.',
+        'Training completed',
+        'Your certificate details have been submitted successfully.',
         [{ text: 'OK', onPress: () => navigation.goBack() }],
       );
     } catch (err) {
@@ -115,9 +112,9 @@ export default function TrainingDetailScreen({ route, navigation }) {
     }
 
     confirm({
-      title: 'Submit for review?',
+      title: 'Complete training?',
       message:
-        'Your certificate details will be sent to your fleet manager for approval.',
+        'Your certificate details will be submitted to your fleet manager.',
       confirmLabel: 'Submit',
       onConfirm: submitTraining,
     });
@@ -132,8 +129,7 @@ export default function TrainingDetailScreen({ route, navigation }) {
   }
 
   const showForm = training && canSubmitCompletion(training.status);
-  const showSubmittedDetails =
-    training && !showForm && hasSubmittedDetails(training);
+  const showCompletionDetails = training && hasSubmittedDetails(training);
 
   return (
     <Screen scroll scrollRef={scrollRef}>
@@ -153,40 +149,48 @@ export default function TrainingDetailScreen({ route, navigation }) {
         <>
           <TrainingSummaryCard training={training} />
 
-          {showSubmittedDetails ? (
-            <Section
-              title="Submitted certificate"
-              subtitle="Details sent to your fleet manager"
-              style={styles.section}
-            >
-              <ProfileDetailRow
-                icon="calendar-outline"
-                label="Issue date"
-                value={formatDate(training.issueDate)}
-              />
-              <ProfileDetailRow
-                icon="calendar-outline"
-                label="Expiry date"
-                value={formatDate(training.expiryDate)}
-              />
+          <Section
+            title="Training details"
+            subtitle="Course and schedule information"
+            style={styles.section}
+          >
+            <ProfileDetailRow
+              icon="person-outline"
+              label="Instructor"
+              value={training.instructor}
+            />
+            <ProfileDetailRow
+              icon="location-outline"
+              label="Location"
+              value={training.location}
+            />
+            <ProfileDetailRow
+              icon="calendar-outline"
+              label="Scheduled"
+              value={formatDate(training.scheduledDate)}
+            />
+            {showCompletionDetails ? (
               <ProfileDetailRow
                 icon="checkmark-circle-outline"
-                label="Completion date"
+                label="Completed"
                 value={formatDate(training.completionDate)}
+                isLast
               />
+            ) : (
               <ProfileDetailRow
-                icon="document-text-outline"
-                label="Certificate URL"
-                value={training.certificateUrl}
+                icon="person-outline"
+                label="Driver"
+                value={training.driverName}
+                isLast
               />
-            </Section>
-          ) : null}
+            )}
+          </Section>
 
           {showForm ? (
             <>
               <Section
                 title="Certificate details"
-                subtitle="Enter your training certificate information for review"
+                subtitle="Enter your training certificate information"
                 style={styles.section}
               >
                 <Input
@@ -235,7 +239,7 @@ export default function TrainingDetailScreen({ route, navigation }) {
               <AlertBanner message={error} />
 
               <ScreenActionButton
-                title="Submit for review"
+                title="Complete training"
                 onPress={handleSubmitPress}
                 loading={submitting}
               />

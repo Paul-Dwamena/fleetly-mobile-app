@@ -18,9 +18,17 @@ function getVehicleStatusBadge(status) {
   return { label: status || 'Unknown', status: 'inactive' };
 }
 
+function getVehicleLabel(vehicle) {
+  if (vehicle?.vehicleName) {
+    return vehicle.vehicleName;
+  }
+
+  return [vehicle?.make, vehicle?.model].filter(Boolean).join(' ');
+}
+
 export default function AssignedVehicleCard({ vehicle }) {
-  const vehicleBadge = vehicle ? getVehicleStatusBadge(vehicle.status) : null;
-  const vehicleLabel = [vehicle?.make, vehicle?.model].filter(Boolean).join(' ');
+  const vehicleBadge = vehicle?.status ? getVehicleStatusBadge(vehicle.status) : null;
+  const vehicleLabel = getVehicleLabel(vehicle);
 
   return (
     <Card comfortable style={styles.card}>

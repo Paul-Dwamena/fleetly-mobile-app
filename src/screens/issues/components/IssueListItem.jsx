@@ -1,46 +1,24 @@
 import React from 'react';
-import { TouchableOpacity, Text, View } from 'react-native';
+import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { StatusBadge } from '../../../components/common';
 import { listItemStyles as styles } from '../../../components/common/listItemStyles';
-import { colors } from '../../../theme';
+import { colors, spacing } from '../../../theme';
 import { formatDateTime } from '../../../utils/format/date';
+import { getPriorityBadge, getStatusBadge } from '../utils/issueStatus';
 
-function getStatusBadgeProps(status) {
-  const normalized = status?.toUpperCase();
-
-  if (normalized === 'OPEN') {
-    return { label: 'Open', status: 'pending' };
-  }
-
-  if (normalized === 'IN_PROGRESS') {
-    return { label: 'In progress', status: 'active' };
-  }
-
-  if (normalized === 'RESOLVED' || normalized === 'CLOSED') {
-    return { label: 'Resolved', status: 'inactive' };
-  }
-
-  return { label: status || 'Unknown', status: 'inactive' };
-}
-
-function getPriorityBadgeProps(priority) {
-  const normalized = priority?.toUpperCase();
-
-  if (normalized === 'HIGH') {
-    return { label: 'High', status: 'danger' };
-  }
-
-  if (normalized === 'MEDIUM') {
-    return { label: 'Medium', status: 'pending' };
-  }
-
-  return { label: 'Low', status: 'inactive' };
+function LabeledPill({ label, badgeLabel, status }) {
+  return (
+    <View style={localStyles.labeledPill}>
+      <Text style={localStyles.inlineLabel}>{label}</Text>
+      <StatusBadge size="compact" label={badgeLabel} status={status} />
+    </View>
+  );
 }
 
 export default function IssueListItem({ issue, onPress, isLast = false }) {
-  const statusBadge = getStatusBadgeProps(issue.status);
-  const priorityBadge = getPriorityBadgeProps(issue.priority);
+  const statusBadge = getStatusBadge(issue.status);
+  const priorityBadge = getPriorityBadge(issue.priority);
 
   return (
     <TouchableOpacity
@@ -53,17 +31,17 @@ export default function IssueListItem({ issue, onPress, isLast = false }) {
           {issue.description}
         </Text>
         <Text style={styles.meta} numberOfLines={1}>
-          {issue.vehiclePlate} · {formatDateTime(issue.reportedAt)}
+          {issue.vehicleName} · {formatDateTime(issue.reportedAt)}
         </Text>
-        <View style={styles.badgeRow}>
-          <StatusBadge
-            size="compact"
-            label={statusBadge.label}
+        <View style={[styles.badgeRow, localStyles.metricsRow]}>
+          <LabeledPill
+            label="Status:"
+            badgeLabel={statusBadge.label}
             status={statusBadge.status}
           />
-          <StatusBadge
-            size="compact"
-            label={priorityBadge.label}
+          <LabeledPill
+            label="Priority:"
+            badgeLabel={priorityBadge.label}
             status={priorityBadge.status}
           />
         </View>
@@ -72,3 +50,20 @@ export default function IssueListItem({ issue, onPress, isLast = false }) {
     </TouchableOpacity>
   );
 }
+
+const localStyles = StyleSheet.create({
+  metricsRow: {
+    alignItems: 'center',
+  },
+  labeledPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+  },
+  inlineLabel: {
+    fontSize: 13,
+    lineHeight: 18,
+    color: colors.slate[500],
+    fontWeight: '600',
+  },
+});

@@ -1,9 +1,11 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Alert, StyleSheet } from 'react-native';
+import { useSelector } from 'react-redux';
 import {
   AlertBanner,
   ConfirmModal,
   Input,
+  LoadingSpinner,
   Screen,
   ScreenActionButton,
   Section,
@@ -12,14 +14,28 @@ import {
 import PrioritySelector from './components/PrioritySelector';
 import ReportIssueIntroCard from './components/ReportIssueIntroCard';
 import { createIssue } from '../../services/issueService';
-import { MOCK_ISSUE_DEFAULTS } from '../../mocks/issueMock';
+import { getDriverOverview } from '../../services/driverService';
 import { getApiError } from '../../utils/api/error';
 import { spacing } from '../../theme';
 
+function getReporterName(user) {
+  const name = [user?.firstName, user?.lastName].filter(Boolean).join(' ');
+
+  if (name) {
+    return name;
+  }
+
+  return user?.email?.split('@')[0] ?? 'Driver';
+}
+
 export default function ReportIssueScreen({ navigation }) {
+  const authUser = useSelector((state) => state.auth.user);
   const { confirm, confirmModalProps } = useConfirmModal();
+  const [vehicleId, setVehicleId] = useState(null);
+  const [vehicleName, setVehicleName] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState('MEDIUM');
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const scrollRef = useRef(null);
@@ -37,14 +53,34 @@ export default function ReportIssueScreen({ navigation }) {
     }
   };
 
+  useEffect(() => {
+    const loadVehicle = async () => {
+      try {
+        setError('');
+        setLoading(true);
+        const overview = await getDriverOverview();
+        setVehicleId(overview?.currentAsset?.vehicleId ?? null);
+        setVehicleName(overview?.currentAsset?.vehicleName ?? '');
+      } catch (err) {
+        showError(getApiError(err));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadVehicle();
+  }, []);
+
   const submitIssue = async () => {
     setError('');
     setSubmitting(true);
 
     try {
       const result = await createIssue({
-        vehicleId: MOCK_ISSUE_DEFAULTS.vehicleId,
-        reportedByType: MOCK_ISSUE_DEFAULTS.reportedByType,
+        vehicleId,
+        reportedById: authUser?.id,
+        reportedByType: 'DRIVER',
+        reporterName: getReporterName(authUser),
         description: description.trim(),
         priority,
       });
@@ -69,6 +105,16 @@ export default function ReportIssueScreen({ navigation }) {
   };
 
   const handleSubmitPress = () => {
+    if (!vehicleId) {
+      showError('No vehicle is assigned to you. Contact your fleet manager.');
+      return;
+    }
+
+    if (!authUser?.id) {
+      showError('Unable to identify your driver account. Please sign in again.');
+      return;
+    }
+
     if (!description.trim()) {
       showError('Please describe the issue.');
       return;
@@ -83,9 +129,17 @@ export default function ReportIssueScreen({ navigation }) {
     });
   };
 
+  if (loading) {
+    return (
+      <Screen>
+        <LoadingSpinner fullScreen />
+      </Screen>
+    );
+  }
+
   return (
     <Screen scroll scrollRef={scrollRef}>
-      <ReportIssueIntroCard vehiclePlate={MOCK_ISSUE_DEFAULTS.vehiclePlate} />
+      <ReportIssueIntroCard vehicleName={vehicleName} />
 
       <Section
         title="Issue details"

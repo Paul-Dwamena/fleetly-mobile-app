@@ -9,7 +9,7 @@ import { getStatusBadge } from '../utils/trainingStatus';
 
 export default function TrainingListItem({ training, onPress, isLast = false }) {
   const statusBadge = getStatusBadge(training.status);
-  const expiryLabel = formatDate(training.expiryDate);
+  const scheduledLabel = formatDate(training.scheduledDate);
 
   return (
     <TouchableOpacity
@@ -19,21 +19,19 @@ export default function TrainingListItem({ training, onPress, isLast = false }) 
     >
       <View style={styles.content}>
         <Text style={styles.title} numberOfLines={1}>
-          {training.type}
+          {training.trainingName}
         </Text>
+        {scheduledLabel || training.location ? (
+          <Text style={styles.meta} numberOfLines={1}>
+            {[scheduledLabel, training.location].filter(Boolean).join(' · ')}
+          </Text>
+        ) : null}
         <View style={styles.badgeRow}>
           <StatusBadge
             size="compact"
             label={statusBadge.label}
             status={statusBadge.status}
           />
-          {expiryLabel ? (
-            <StatusBadge
-              size="compact"
-              label={`Exp. ${expiryLabel}`}
-              status="inactive"
-            />
-          ) : null}
         </View>
       </View>
       <Icon name="chevron-forward" size={18} color={colors.slate[400]} />

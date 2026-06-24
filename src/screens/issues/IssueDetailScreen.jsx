@@ -72,8 +72,8 @@ export default function IssueDetailScreen({ route, navigation }) {
           >
             <ProfileDetailRow
               icon="car-outline"
-              label="Vehicle plate"
-              value={issue.vehiclePlate}
+              label="Vehicle"
+              value={issue.vehicleName}
             />
             <ProfileDetailRow
               icon="flag-outline"
