@@ -1,4 +1,4 @@
 export const CONFIG = {
-  BASE_URL: "https://your-api-url.com/api",
+  BASE_URL: 'https://fleetly.wigal.com.gh/api',
   TIMEOUT: 15000,
 };
