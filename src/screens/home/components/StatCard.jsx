@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   value: {
-    fontSize: 28,
+    fontSize: 24,
     lineHeight: 34,
     fontWeight: '800',
     color: colors.slate[900],

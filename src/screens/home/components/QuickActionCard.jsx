@@ -6,7 +6,6 @@ import { colors, spacing, shadows, borders, surfaces } from '../../../theme';
 export default function QuickActionCard({
   title,
   description,
-  buttonTitle,
   icon,
   iconColor = colors.primary[700],
   iconBackground = colors.primary[50],
@@ -16,40 +15,35 @@ export default function QuickActionCard({
   style,
 }) {
   return (
-    <View style={[styles.card, style]}>
+    <TouchableOpacity
+      activeOpacity={0.85}
+      onPress={onPress}
+      style={[styles.card, style]}
+      accessibilityRole="button"
+      accessibilityLabel={title}
+    >
       <View style={styles.bgIconWrap} pointerEvents="none">
-        <Icon name={icon} size={120} color={accentColor} style={styles.bgIcon} />
+        <Icon name={icon} size={88} color={accentColor} style={styles.bgIcon} />
       </View>
 
       <View style={styles.content}>
-        <View style={styles.header}>
-          <View
-            style={[
-              styles.iconWrap,
-              { backgroundColor: iconBackground, borderColor: iconBorderColor },
-            ]}
-          >
-            <Icon name={icon} size={26} color={iconColor} />
-          </View>
-          <Text style={styles.title}>{title}</Text>
+        <View
+          style={[
+            styles.iconWrap,
+            { backgroundColor: iconBackground, borderColor: iconBorderColor },
+          ]}
+        >
+          <Icon name={icon} size={22} color={iconColor} />
         </View>
 
-        <Text style={styles.description}>{description}</Text>
-
-        <TouchableOpacity
-          activeOpacity={0.85}
-          onPress={onPress}
-          style={styles.button}
-          accessibilityRole="button"
-          accessibilityLabel={buttonTitle}
-        >
-          <Text style={styles.buttonText}>{buttonTitle}</Text>
-          <View style={styles.buttonArrow}>
-            <Icon name="arrow-forward" size={18} color={colors.white} />
-          </View>
-        </TouchableOpacity>
+        <Text style={styles.title} numberOfLines={2}>
+          {title}
+        </Text>
+        <Text style={styles.description} numberOfLines={3}>
+          {description}
+        </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -59,77 +53,46 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     ...borders.light,
     ...shadows.md,
-    marginBottom: spacing.md,
     overflow: 'hidden',
+    minHeight: 168,
   },
   bgIconWrap: {
     position: 'absolute',
-    top: -18,
-    right: -28,
+    top: -12,
+    right: -20,
     opacity: 0.1,
   },
   bgIcon: {
     transform: [{ rotate: '-12deg' }],
   },
   content: {
-    padding: spacing.lg,
-  },
-  header: {
-    flexDirection: 'row',
+    flex: 1,
+    padding: spacing.md,
     alignItems: 'center',
-    gap: spacing.md,
-    marginBottom: spacing.sm,
+    justifyContent: 'center',
   },
   iconWrap: {
-    width: 48,
-    height: 48,
-    borderRadius: 14,
+    width: 40,
+    height: 40,
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
+    marginBottom: spacing.sm,
+    alignSelf: 'center',
   },
   title: {
-    flex: 1,
-    fontSize: 19,
-    lineHeight: 26,
-    fontWeight: '700',
-    color: colors.slate[900],
-  },
-  description: {
-    fontSize: 16,
-    lineHeight: 24,
-    color: colors.slate[600],
-    marginBottom: spacing.lg,
-  },
-  button: {
-    minHeight: 50,
-    borderRadius: 12,
-    backgroundColor: colors.primary[600],
-    borderWidth: 1,
-    borderColor: colors.primary[600],
-    paddingHorizontal: spacing.lg,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...shadows.sm,
-  },
-  buttonText: {
     fontSize: 16,
     lineHeight: 22,
     fontWeight: '700',
-    color: colors.white,
+    color: colors.slate[900],
+    marginBottom: spacing.xs,
     textAlign: 'center',
-    flex: 1,
-    paddingRight: spacing.xl,
   },
-  buttonArrow: {
-    position: 'absolute',
-    right: spacing.md,
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: 'rgba(255,255,255,0.16)',
-    alignItems: 'center',
-    justifyContent: 'center',
+  description: {
+    fontSize: 12,
+    lineHeight: 18,
+    color: colors.slate[600],
+    textAlign: 'center',
   },
 });

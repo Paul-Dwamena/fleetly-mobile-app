@@ -43,6 +43,6 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    padding: spacing.xl,
+    padding: spacing.md,
   },
 });

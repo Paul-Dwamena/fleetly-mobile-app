@@ -56,7 +56,6 @@ const styles = StyleSheet.create({
   section: {
     marginTop: spacing.xl,
     marginBottom: spacing.lg,
-    marginHorizontal: -spacing.xl,
     backgroundColor: surfaces.card,
     borderTopLeftRadius: SECTION_TOP_RADIUS,
     borderTopRightRadius: SECTION_TOP_RADIUS,

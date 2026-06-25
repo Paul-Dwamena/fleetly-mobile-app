@@ -10,7 +10,7 @@ export default function InspectionTemplateListItem({
   onPress,
   isLast = false,
 }) {
-  const itemCount = template.itemCount ?? template.items?.length ?? 0;
+  const itemsCount = template.itemsCount
 
   return (
     <TouchableOpacity
@@ -30,7 +30,7 @@ export default function InspectionTemplateListItem({
         <View style={styles.badgeRow}>
           <StatusBadge
             size="compact"
-            label={`${itemCount} checklist items`}
+            label={`${itemsCount} checklist items`}
             status="active"
           />
         </View>

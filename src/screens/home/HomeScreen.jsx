@@ -163,48 +163,50 @@ export default function HomeScreen() {
         subtitle="Common tasks you can do right now"
         contentStyle={styles.quickActionsSection}
       >
-        <QuickActionCard
-          title="Start inspection"
-          description="Complete your daily vehicle check before you drive."
-          buttonTitle="Go to inspection"
-          icon="clipboard-outline"
-          onPress={() =>
-            navigation.navigate('Inspection', {
-              screen: 'InspectionList',
-            })
-          }
-        />
-        <QuickActionCard
-          title="Report an issue"
-          description="Tell your fleet manager about a problem with your vehicle."
-          buttonTitle="Go to issues"
-          icon="warning-outline"
-          iconColor={colors.warning[700]}
-          iconBackground={colors.warning[100]}
-          iconBorderColor={colors.warning[100]}
-          accentColor={colors.warning[700]}
-          onPress={() =>
-            navigation.navigate('Issues', { screen: 'IssueList' })
-          }
-        />
-        <QuickActionCard
-          title="Request a vehicle"
-          description="Need a replacement while yours is unavailable?"
-          buttonTitle="Request vehicle"
-          icon="car-outline"
-          onPress={() =>
-            navigation.navigate('VehicleRequests', { screen: 'VehicleRequestList' })
-          }
-        />
-        <QuickActionCard
-          title="Complete training"
-          description="Finish assigned courses to stay compliant with fleet requirements."
-          buttonTitle="Go to training"
-          icon="school-outline"
-          onPress={() =>
-            navigation.navigate('Training', { screen: 'TrainingList' })
-          }
-        />
+        <View style={styles.quickActionsGrid}>
+          <QuickActionCard
+            title="Start inspection"
+            description="Complete your daily vehicle check before you drive."
+            icon="clipboard-outline"
+            style={styles.quickActionCell}
+            onPress={() =>
+              navigation.navigate('Inspection', {
+                screen: 'InspectionList',
+              })
+            }
+          />
+          <QuickActionCard
+            title="Report an issue"
+            description="Tell your fleet manager about a problem with your vehicle."
+            icon="warning-outline"
+            iconColor={colors.warning[700]}
+            iconBackground={colors.warning[100]}
+            iconBorderColor={colors.warning[100]}
+            accentColor={colors.warning[700]}
+            style={styles.quickActionCell}
+            onPress={() =>
+              navigation.navigate('Issues', { screen: 'IssueList' })
+            }
+          />
+          <QuickActionCard
+            title="Request a vehicle"
+            description="Need a replacement while yours is unavailable?"
+            icon="car-outline"
+            style={styles.quickActionCell}
+            onPress={() =>
+              navigation.navigate('VehicleRequests', { screen: 'VehicleRequestList' })
+            }
+          />
+          <QuickActionCard
+            title="Complete training"
+            description="Finish assigned courses to stay compliant with fleet requirements."
+            icon="school-outline"
+            style={styles.quickActionCell}
+            onPress={() =>
+              navigation.navigate('Training', { screen: 'TrainingList' })
+            }
+          />
+        </View>
       </Section>
 
     </Screen>
@@ -281,5 +283,14 @@ const styles = StyleSheet.create({
   },
   quickActionsSection: {
     backgroundColor: colors.primary[50],
+    paddingHorizontal: spacing.sm,
+  },
+  quickActionsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+  },
+  quickActionCell: {
+    width: '48%',
   },
 });
