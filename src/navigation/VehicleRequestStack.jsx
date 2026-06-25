@@ -22,7 +22,7 @@ export default function VehicleRequestStack() {
       <Stack.Screen
         name="VehicleRequestList"
         component={VehicleRequestListScreen}
-        options={{ ...headerOptions, title: 'Vehicle requests' }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="SubmitVehicleRequest"

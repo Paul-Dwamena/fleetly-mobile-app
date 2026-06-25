@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { colors, spacing, typography, surfaces } from '../../theme';
+import { colors, spacing, typography, surfaces, shadows } from '../../theme';
 
-const SECTION_TOP_RADIUS = 18;
+const SECTION_RADIUS = 12;
 
 function SectionHeading({ title, subtitle }) {
   return (
@@ -57,18 +57,10 @@ const styles = StyleSheet.create({
     marginTop: spacing.xl,
     marginBottom: spacing.lg,
     backgroundColor: surfaces.card,
-    borderTopLeftRadius: SECTION_TOP_RADIUS,
-    borderTopRightRadius: SECTION_TOP_RADIUS,
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
+    borderRadius: SECTION_RADIUS,
     overflow: 'hidden',
-    borderTopWidth: 5,
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-    borderBottomWidth: 0,
-    borderColor: colors.primary[600],
+    ...shadows.xs,
   },
-
   header: {
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.sm,
@@ -77,7 +69,7 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.primary[200],
   },
   body: {
-    paddingHorizontal: spacing.xl,
+    paddingHorizontal: spacing.lg,
     paddingVertical: spacing.lg,
     backgroundColor: surfaces.card,
   },
@@ -94,9 +86,8 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.lg,
     backgroundColor: colors.primary[50],
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: colors.primary[200],
+    borderRadius: SECTION_RADIUS,
+    ...shadows.sm,
   },
   titleRow: {
     flexDirection: 'row',

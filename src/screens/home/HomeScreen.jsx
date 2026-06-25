@@ -139,7 +139,6 @@ export default function HomeScreen() {
             value={String(overview?.incidents ?? 0)}
             icon="warning-outline"
             iconColor={colors.warning[700]}
-            iconBackground={colors.warning[100]}
           />
           <StatCard
             variant="cell"
@@ -161,7 +160,8 @@ export default function HomeScreen() {
       <Section
         title="Quick actions"
         subtitle="Common tasks you can do right now"
-        contentStyle={styles.quickActionsSection}
+        contentStyle={{backgroundColor: colors.primary[50]}}
+        contentFlush
       >
         <View style={styles.quickActionsGrid}>
           <QuickActionCard
@@ -180,8 +180,6 @@ export default function HomeScreen() {
             description="Tell your fleet manager about a problem with your vehicle."
             icon="warning-outline"
             iconColor={colors.warning[700]}
-            iconBackground={colors.warning[100]}
-            iconBorderColor={colors.warning[100]}
             accentColor={colors.warning[700]}
             style={styles.quickActionCell}
             onPress={() =>
@@ -195,6 +193,17 @@ export default function HomeScreen() {
             style={styles.quickActionCell}
             onPress={() =>
               navigation.navigate('VehicleRequests', { screen: 'VehicleRequestList' })
+            }
+          />
+          <QuickActionCard
+            title="Report accident"
+            description="Notify your fleet manager about a vehicle incident."
+            icon="car-sport-outline"
+            iconColor={colors.danger[700]}
+            accentColor={colors.danger[700]}
+            style={styles.quickActionCell}
+            onPress={() =>
+              navigation.navigate('Accidents', { screen: 'AccidentList' })
             }
           />
           <QuickActionCard
@@ -281,14 +290,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
-  quickActionsSection: {
-    backgroundColor: colors.primary[50],
-    paddingHorizontal: spacing.sm,
-  },
   quickActionsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: spacing.sm,
+    padding: spacing.sm,
+    marginBottom: spacing.lg,
   },
   quickActionCell: {
     width: '48%',

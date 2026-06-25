@@ -16,6 +16,7 @@ const createShadow = (elevation, opacity, radius, offsetY) =>
   });
 
 export const shadows = {
+  xs: createShadow(1, 0.05, 4, 1),
   sm: createShadow(3, 0.08, 6, 2),
   md: createShadow(5, 0.12, 10, 3),
   lg: createShadow(8, 0.14, 14, 4),

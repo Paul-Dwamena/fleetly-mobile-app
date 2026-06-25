@@ -2,6 +2,7 @@ export { default as CompanyLogo } from './CompanyLogo';
 export { default as AlertBanner } from './AlertBanner';
 export { default as Button } from './Button';
 export { default as Input } from './Input';
+export { default as DateTimePickerField } from './DateTimePickerField';
 export { default as Screen } from './Screen';
 export { default as ScreenHeader } from './ScreenHeader';
 export { default as ScreenActionButton } from './ScreenActionButton';

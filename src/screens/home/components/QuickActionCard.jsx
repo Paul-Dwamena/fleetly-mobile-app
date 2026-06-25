@@ -1,15 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { colors, spacing, shadows, borders, surfaces } from '../../../theme';
+import { colors, spacing, shadows, surfaces, borders } from '../../../theme';
 
 export default function QuickActionCard({
   title,
   description,
   icon,
   iconColor = colors.primary[700],
-  iconBackground = colors.primary[50],
-  iconBorderColor = colors.primary[100],
   accentColor = colors.primary[600],
   onPress,
   style,
@@ -27,14 +25,7 @@ export default function QuickActionCard({
       </View>
 
       <View style={styles.content}>
-        <View
-          style={[
-            styles.iconWrap,
-            { backgroundColor: iconBackground, borderColor: iconBorderColor },
-          ]}
-        >
-          <Icon name={icon} size={22} color={iconColor} />
-        </View>
+        <Icon name={icon} size={26} color={iconColor} style={styles.icon} />
 
         <Text style={styles.title} numberOfLines={2}>
           {title}
@@ -50,9 +41,9 @@ export default function QuickActionCard({
 const styles = StyleSheet.create({
   card: {
     backgroundColor: surfaces.card,
-    borderRadius: 16,
+    borderRadius: 12,
     ...borders.light,
-    ...shadows.md,
+    ...shadows.sm,
     overflow: 'hidden',
     minHeight: 168,
   },
@@ -60,7 +51,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -12,
     right: -20,
-    opacity: 0.1,
+    opacity: 0.08,
   },
   bgIcon: {
     transform: [{ rotate: '-12deg' }],
@@ -68,18 +59,11 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: spacing.md,
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'center',
   },
-  iconWrap: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
+  icon: {
     marginBottom: spacing.sm,
-    alignSelf: 'center',
   },
   title: {
     fontSize: 16,
@@ -87,12 +71,12 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: colors.slate[900],
     marginBottom: spacing.xs,
-    textAlign: 'center',
+    textAlign: 'left',
   },
   description: {
     fontSize: 12,
     lineHeight: 18,
     color: colors.slate[600],
-    textAlign: 'center',
+    textAlign: 'left',
   },
 });

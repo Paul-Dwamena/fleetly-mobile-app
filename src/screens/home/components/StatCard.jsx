@@ -19,7 +19,6 @@ export default function StatCard({
   value,
   icon,
   iconColor = colors.primary[600],
-  iconBackground = colors.primary[50],
   variant = 'cell',
   index = 0,
 }) {
@@ -28,9 +27,7 @@ export default function StatCard({
   return (
     <View style={[isCell ? styles.cell : styles.card, isCell && getCellBorders(index)]}>
       <View style={styles.cardContent}>
-        <View style={[styles.iconBox, { backgroundColor: iconBackground }]}>
-          <Icon name={icon} size={24} color={iconColor} />
-        </View>
+        <Icon name={icon} size={22} color={iconColor} />
         <Text style={styles.value} accessibilityRole="text">
           {value}
         </Text>
@@ -45,13 +42,13 @@ export default function StatCard({
 const styles = StyleSheet.create({
   cell: {
     width: '50%',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     paddingVertical: spacing.lg,
-    paddingHorizontal: spacing.sm,
+    paddingHorizontal: spacing.lg,
   },
   card: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: 'flex-start',
     minWidth: '45%',
     paddingVertical: spacing.lg,
     paddingHorizontal: spacing.md,
@@ -60,18 +57,9 @@ const styles = StyleSheet.create({
   cardContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: spacing.md,
+    justifyContent: 'flex-start',
+    gap: spacing.sm,
     marginBottom: spacing.sm,
-  },
-  iconBox: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: colors.primary[100],
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   value: {
     fontSize: 24,
@@ -84,6 +72,6 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     fontWeight: '600',
     color: colors.slate[600],
-    textAlign: 'center',
+    textAlign: 'left',
   },
 });

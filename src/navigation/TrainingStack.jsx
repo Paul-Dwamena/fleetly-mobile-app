@@ -21,7 +21,7 @@ export default function TrainingStack() {
       <Stack.Screen
         name="TrainingList"
         component={TrainingListScreen}
-        options={{ ...headerOptions, title: 'Training' }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="TrainingDetail"

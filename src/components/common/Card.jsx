@@ -8,7 +8,7 @@ export default function Card({ children, style, elevated = true, comfortable = f
       style={[
         styles.card,
         comfortable && styles.comfortable,
-        elevated && shadows.md,
+        elevated && shadows.xs,
         style,
       ]}
     >
@@ -20,7 +20,7 @@ export default function Card({ children, style, elevated = true, comfortable = f
 const styles = StyleSheet.create({
   card: {
     backgroundColor: surfaces.card,
-    borderRadius: 14,
+    borderRadius: 12,
     ...borders.light,
     padding: spacing.lg,
     marginBottom: spacing.lg,
